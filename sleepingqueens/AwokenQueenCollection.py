@@ -10,13 +10,11 @@ class AwokenQueenCollection(QueenCollection):
 
     queens: dict[AwokenQueenPosition, Queen]
 
-    @overload
     def addQueen(self, queen: Queen):
         for i in range(len(self.queens) + 1):
             if AwokenQueenPosition(_cardIndex=i, _playerIndex=self.playerIdx) not in self.queens:
                 self.queens[AwokenQueenPosition(_cardIndex=i, _playerIndex=self.playerIdx)] = queen
                 return
 
-    @overload
     def removeQueen(self, position: AwokenQueenPosition):
-        return self.queens.pop(AwokenQueenPosition)
+        return self.queens.pop(position)
