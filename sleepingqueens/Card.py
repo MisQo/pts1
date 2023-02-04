@@ -6,3 +6,7 @@ from sleepingqueens.CardType import CardType
 class Card:
     type: CardType
     value: int
+
+    def __init__(self, cardtype: CardType, value_: int = 0):
+        self.type = cardtype
+        self.value = value_
