@@ -3,7 +3,7 @@ from unittest import TestCase
 import random
 
 from sleepingqueens.CardType import CardType
-from sleepingqueens.DrawingAndDiscardPile import DrawingAndDiscardPile
+from sleepingqueens.DrawingAndDiscardPile import DrawingAndDiscardPile, ConcreteStrategyB
 from sleepingqueens.Card import Card
 
 
@@ -37,7 +37,7 @@ class testPile(TestCase):
         for i in range(3):
             self.assertTrue(self.hand[i] in deck.getDiscardPile())
 
-    def test_shuffle(self):
+    def test_shuffleA(self):
         deck = DrawingAndDiscardPile(copy(self.drawPile[:1]),
                                      [Card(CardType.Number, 4), Card(CardType.Number, 5), Card(CardType.Number, 6),
                                       Card(CardType.Number, 7)], 42)
@@ -58,3 +58,30 @@ class testPile(TestCase):
         for i in range(3):
             self.assertTrue(discard[i] in self.hand)
             self.assertTrue(self.hand[i] in discard)
+
+    def test_shuffleB(self):
+        deck = DrawingAndDiscardPile(copy(self.drawPile[:1]),
+                                     [Card(CardType.Number, 4), Card(CardType.Number, 5), Card(CardType.Number, 6),
+                                      Card(CardType.Number, 7)], 42, ConcreteStrategyB())
+
+        '''random.seed(42)
+        x = [Card(CardType.Number, 4), Card(CardType.Number, 5), Card(CardType.Number, 6),
+             Card(CardType.Number, 7)] + self.hand
+        random.shuffle(x)
+        print(x)'''
+
+        drawn = deck.discardAndDraw(self.hand)
+        expected = [Card(CardType.King), Card(CardType.Number, 5), Card(CardType.Number, 7)]
+
+        self.assertTrue(len(drawn) == 3)
+
+        for i in range(3):
+            self.assertTrue(drawn[i] in expected)
+            self.assertTrue(expected[i] in drawn)
+
+        self.assertEqual(deck.getDrawPile(),
+                         [Card(CardType.Number, 1), Card(CardType.Number, 6), Card(CardType.Number, 3),
+                          Card(CardType.Number, 4), Card(CardType.Number, 2)])
+
+        discard = deck.getDiscardPile()
+        self.assertTrue(len(discard) == 0)
