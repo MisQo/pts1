@@ -8,3 +8,6 @@ class HandPosition(Position):
 
     def getPlayerIndex(self) -> int:
         return self._playerIndex
+
+    def __hash__(self):
+        return hash((self._cardIndex, self._playerIndex))

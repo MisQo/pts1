@@ -27,6 +27,8 @@ class ConcreteStrategyB(Strategy):
         discard += cards
         random.shuffle(discard)
         draw += discard
+        while len(discard):
+            discard.pop()
 
 
 class DrawingAndDiscardPile:
@@ -49,8 +51,8 @@ class DrawingAndDiscardPile:
 
     def __init__(self, draw: list[Card], discard: list[Card] = [], _seed: int = 0,
                  _strategy: Strategy = ConcreteStrategyA()):
-        self.drawPile = draw
-        self.discardPile = discard
+        self.drawPile = copy(draw)
+        self.discardPile = copy(discard)
         self.setSeed(_seed)
         self.strategy = _strategy
 
