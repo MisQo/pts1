@@ -4,4 +4,5 @@ from sleepingqueens.Position import Position
 
 @dataclass
 class SleepingQueenPosition(Position):
-    pass
+    def __hash__(self):
+        return hash(self._cardIndex)

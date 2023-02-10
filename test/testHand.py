@@ -18,7 +18,7 @@ class testHand(TestCase):
         self.cards = dict()
         for i in range(5):
             self.cards[HandPosition(i, 0)] = Card(CardType.Number, i)
-        self.hand = Hand(0, self.cards, self.deck)
+        self.hand = Hand(self.cards, self.deck)
         self.pick = [HandPosition(1, 0), HandPosition(2, 0), HandPosition(4, 0)]
 
     def test_getCards(self):
@@ -30,7 +30,7 @@ class testHand(TestCase):
             HandPosition(1, 0): Card(CardType.Dragon),
             HandPosition(2, 0): Card(CardType.Knight)
         }
-        hand = Hand(0, cards, self.deck)
+        hand = Hand(cards, self.deck)
 
         self.assertTrue(cards[hand.hasCardOfType(CardType.King)].type.value == CardType.King.value)
         self.assertTrue(cards[hand.hasCardOfType(CardType.Dragon)].type.value == CardType.Dragon.value)

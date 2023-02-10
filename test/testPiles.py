@@ -1,10 +1,9 @@
 from copy import copy
 from unittest import TestCase
-import random
 
+from sleepingqueens.Card import Card
 from sleepingqueens.CardType import CardType
 from sleepingqueens.DrawingAndDiscardPile import DrawingAndDiscardPile, ConcreteStrategyB
-from sleepingqueens.Card import Card
 
 
 class testPile(TestCase):
@@ -63,12 +62,6 @@ class testPile(TestCase):
         deck = DrawingAndDiscardPile(copy(self.drawPile[:1]),
                                      [Card(CardType.Number, 4), Card(CardType.Number, 5), Card(CardType.Number, 6),
                                       Card(CardType.Number, 7)], 42, ConcreteStrategyB())
-
-        '''random.seed(42)
-        x = [Card(CardType.Number, 4), Card(CardType.Number, 5), Card(CardType.Number, 6),
-             Card(CardType.Number, 7)] + self.hand
-        random.shuffle(x)
-        print(x)'''
 
         drawn = deck.discardAndDraw(self.hand)
         expected = [Card(CardType.King), Card(CardType.Number, 5), Card(CardType.Number, 7)]

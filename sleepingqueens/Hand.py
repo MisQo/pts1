@@ -7,7 +7,6 @@ from sleepingqueens.HandPosition import HandPosition
 
 
 class Hand:
-    playerIdx: int
     cards: dict[HandPosition, Card]
     deck: DrawingAndDiscardPile
 
@@ -25,8 +24,7 @@ class Hand:
                 return hp
         return None
 
-    def __init__(self, playeridx: int, _cards: dict[HandPosition, Card], _deck: DrawingAndDiscardPile):
-        self.playerIdx = playeridx
+    def __init__(self, _cards: dict[HandPosition, Card], _deck: DrawingAndDiscardPile):
         self.cards = copy(_cards)
         self.deck = copy(_deck)
 

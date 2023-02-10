@@ -1,51 +1,59 @@
 from typing import Optional
 
-from sleepingqueens.Card import Card
+from sleepingqueens.AwokenQueenPosition import AwokenQueenPosition
 from sleepingqueens.CardType import CardType
-from sleepingqueens.Hand import Hand
+from sleepingqueens.EvaluateAttack import EvaluateAttack
+from sleepingqueens.EvaluateDiscard import EvaluateDiscard
+from sleepingqueens.GameState import GameState
 from sleepingqueens.HandPosition import HandPosition
-from sleepingqueens.PlayerState import PlayerState
+from sleepingqueens.MoveQueen import MoveQueen
 from sleepingqueens.Position import Position
 
 
 class Player:
-    state: PlayerState
-    hand: Hand
+    playerIdx: int
+    discard: EvaluateDiscard
+    move: MoveQueen
+    attack: EvaluateAttack
 
-    def validDiscard(self, cards: list[Card]) -> bool:
-        for c in cards:
-            if c.type is not CardType.Number:
-                return False
-
-        if len(cards) == 2:
-            return cards[0].value == cards[1].value
-
-        return sum([c.value for c in cards[:-1]]) == cards[-1].value
-
-    def play(self, cards: list[HandPosition], discard: bool, targetPlayer: Optional[Player] = None,
-             targetQueen: Optional[Position] = None):
+    def play(self, gamestate: GameState, cards: list[HandPosition], discard: bool,
+             targetQueen: Optional[Position] = None) -> None:
         if len(cards) == 0:
             raise Exception("no cards to play")
 
         if discard:
-            if len(cards) == 1:
-                self.hand.removePickedCardsAndRedraw(cards)
-                return
-            else:
-                if not self.validDiscard(self.hand.pickCards(cards)):
-                    raise Exception("invalid Discard turn")
-                self.hand.removePickedCardsAndRedraw(cards)
-                return
+            if not self.discard.validDiscard(gamestate.players[self.playerIdx].hand.pickCards(cards)):
+                raise Exception("invalid discard")
+        else:
+            if len(cards) > 1:
+                raise Exception("multiple cards played")
 
-        card = self.hand.pickCards(cards)[0]
+        card = gamestate.players[self.playerIdx].hand.pickCards(cards)[0]
 
-        if card.type == CardType.King:
-            pass
+        if card.type.value == CardType.King.value:
+            newpos = 0
+            while AwokenQueenPosition(newpos, self.playerIdx) in gamestate.awokenQueens:
+                newpos += 1
+            self.move.move(gamestate, targetQueen,
+                           AwokenQueenPosition(newpos, self.playerIdx))
 
-        if card.type == CardType.Knight or card.type == CardType.SleepingPotion:
-            pass
+        if card.type.value == CardType.Knight.value or card.type.value == CardType.SleepingPotion.value:
+            if not isinstance(targetQueen, AwokenQueenPosition):
+                raise Exception("invalid target")
+            newpos = 0
+            while AwokenQueenPosition(newpos, self.playerIdx) in gamestate.awokenQueens:
+                newpos += 1
+            self.attack.attack(gamestate,
+                               CardType.Dragon if card.type.value == CardType.Knight.value else CardType.MagicWand,
+                               targetQueen, AwokenQueenPosition(newpos, self.playerIdx))
 
-        raise Exception("invalid card played")
+        if card.type.value == CardType.Dragon or card.type.value == CardType.MagicWand.value:
+            raise Exception("invalid card played")
 
-    def getPlayerState(self) -> PlayerState:
-        return self.state
+        gamestate.players[self.playerIdx].hand.removePickedCardsAndRedraw(cards)
+
+    def __init__(self, id: int):
+        self.playerIdx = id
+        self.discard = EvaluateDiscard()
+        self.move = MoveQueen()
+        self.attack = EvaluateAttack()

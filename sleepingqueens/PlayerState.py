@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from typing import Optional
-from sleepingqueens.Card import Card
-from sleepingqueens.Queen import Queen
+
+from sleepingqueens.Hand import Hand
 
 
 @dataclass
 class PlayerState:
-    cards: dict[int, Optional[Card]]
-    awokenQueens: dict[int, Queen]
+    playerIdx: int
+    hand: Hand
