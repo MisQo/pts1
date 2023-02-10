@@ -10,3 +10,6 @@ class CardType(Enum):
     SleepingPotion = 3
     Dragon = 4
     MagicWand = 5
+
+    def __hash__(self):
+        return hash(self.value)

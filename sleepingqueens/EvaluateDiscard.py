@@ -1,8 +1,16 @@
+from abc import ABC, abstractmethod
+
 from sleepingqueens.Card import Card
 from sleepingqueens.CardType import CardType
 
 
-class EvaluateDiscard:
+class EvaluateDiscardInterface(ABC):
+    @abstractmethod
+    def validDiscard(self, cards: list[Card]) -> bool:
+        pass
+
+
+class EvaluateDiscard(EvaluateDiscardInterface):
     def validDiscard(self, cards: list[Card]) -> bool:
         if len(cards) == 1:
             return True

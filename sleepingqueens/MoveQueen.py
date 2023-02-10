@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import Optional
 
 from sleepingqueens.AwokenQueenPosition import AwokenQueenPosition
@@ -6,7 +7,13 @@ from sleepingqueens.Position import Position
 from sleepingqueens.SleepingQueenPosition import SleepingQueenPosition
 
 
-class MoveQueen:
+class MoveQueenInterface(ABC):
+    @abstractmethod
+    def move(self, gamestate: GameState, from_: Optional[Position], to: Position) -> None:
+        pass
+
+
+class MoveQueen(MoveQueenInterface):
     def move(self, gamestate: GameState, from_: Optional[Position], to: Position) -> None:
 
         if isinstance(from_, SleepingQueenPosition):
